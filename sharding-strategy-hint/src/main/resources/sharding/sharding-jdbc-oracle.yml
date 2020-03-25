@@ -1,0 +1,34 @@
+dataSources:
+  sharding0: !!com.zaxxer.hikari.HikariDataSource
+    poolName: sharding0-hikari-pool-1
+    driverClassName: oracle.jdbc.OracleDriver
+    jdbcUrl: jdbc:oracle:thin:@//localhost:1521/ORCLPDB1
+    username: username
+    password: password
+props:
+  sql.show: true
+  check.table.metadata.enabled: false
+shardingRule:
+  defaultDataSourceName: sharding0
+  defaultKeyGenerator:
+    type: SNOWFLAKE
+    column: id
+    props:
+      max.vibration.offset: 10
+  defaultTableStrategy:
+    standard:
+      shardingColumn: id
+      preciseAlgorithmClassName: demo.strategy.hint.config.sharding.algorithm.PreciseModuloShardingAlgorithm
+  bindingTables:
+    - cities
+  tables:
+    cities:
+      logicTable: cities
+      actualDataNodes: sharding0.cities, sharding0.cities_${0..1}
+      tableStrategy:
+        hint:
+          algorithmClassName: demo.strategy.hint.config.sharding.algorithm.DirectHintShardingAlgorithm
+          # 一个逻辑表只能有一个分表策略，Only allowed 0 or 1 sharding strategy configuration
+#        standard:
+#          shardingColumn: id
+#          preciseAlgorithmClassName: demo.strategy.hint.config.sharding.algorithm.PreciseModuloShardingAlgorithm
