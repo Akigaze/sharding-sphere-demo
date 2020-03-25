@@ -1,0 +1,9 @@
+rootProject.name = 'sharding-sphere-demo'
+include 'common'
+include 'sharding-jdbc-java-config'
+include 'sharding-jdbc-springboot-config'
+include 'sharding-jdbc-yml-config'
+include 'sharding-strategy'
+include 'sharding-jdbc-3'
+include 'sharding-jdbc-4'
+

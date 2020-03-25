@@ -1,0 +1,48 @@
+server:
+  port: 8989
+
+logging:
+  level:
+    demo.sharding.sphere.shardingjdbc: DEBUG
+    org.hibernate: INFO
+    org.hibernate.type.descriptor.sql.BasicBinder: INFO
+    org.hibernate.type.descriptor.sql.BasicExtractor: INFO
+    ShardingSphere-SQL: DEBUG
+
+spring:
+  jpa:
+    database: mysql
+    show-sql: true
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+
+  shardingsphere:
+    datasource:
+      names: sharding0
+      sharding0:
+        name: sharding0
+        driver-class-name: org.mariadb.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3306/sharding0?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+        username: quinn
+        password: quinn
+        connection-properties: characterEncoding=utf8
+        type: com.zaxxer.hikari.HikariDataSource
+    props:
+      show.sql: true
+    sharding:
+      default-data-source-name: sharding0
+      tables:
+        goods:
+          logic-table: goods
+          actual-data-nodes: sharding0.goods$->{0..3}
+          key-generator:
+            column: id
+            type: SNOWFLAKE
+            props:
+              worker.id: 10
+          table-strategy:
+            standard:
+              sharding-column: id
+              precise-algorithm-class-name: shardingjdbc.config.strategy.algorithm.PreciseModuloShardingTableAlgorithm
+      binding-tables: goods

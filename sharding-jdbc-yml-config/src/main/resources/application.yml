@@ -1,0 +1,35 @@
+logging:
+  level:
+    demo.sharding.sphere.shardingjdbc: DEBUG
+    org.hibernate: INFO
+    org.hibernate.type.descriptor.sql.BasicBinder: INFO
+    org.hibernate.type.descriptor.sql.BasicExtractor: INFO
+    Sharding-Sphere-SQL: DEBUG
+
+spring:
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@//localhost:1521/XE
+    username: usernamer
+    password: password
+    hikari:
+      pool-name: yml-hikari-pool-1
+      maximum-pool-size: 20
+
+  jpa:
+    show-sql: true
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate.jdbc.time_zone: UTC
+
+yml:
+  sharding:
+    enabled: true
+    yaml-file-path: sharding/sharding-jdbc-oracle.yml
+    database-node-name: sharding0
+    created-time-sharding-pattern: yy_M
+    key-generator-props:
+      worker.id: ${CF_INSTANCE_INDEX:${random.int(1024)}}
+      max.vibration.offset: 4095 # between [0, 4096)

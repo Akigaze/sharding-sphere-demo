@@ -1,0 +1,17 @@
+plugins {
+
+}
+
+group 'demo.sharding.sphere'
+version '0.0.1-SNAPSHOT'
+
+repositories {
+
+}
+
+dependencies {
+    implementation project(":common")
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    // 3.0.0 版本的yaml配置和springboot配置都与4.0.0的版本有所不同
+    implementation 'io.shardingsphere:sharding-jdbc-spring-boot-starter:3.0.0'
+}

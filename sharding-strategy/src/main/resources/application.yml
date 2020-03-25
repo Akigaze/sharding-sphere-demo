@@ -1,0 +1,64 @@
+server:
+  port: 8899
+
+logging:
+  level:
+    demo.sharding.sphere.shardingjdbc: DEBUG
+    org.hibernate: INFO
+    org.hibernate.type.descriptor.sql.BasicBinder: INFO
+    org.hibernate.type.descriptor.sql.BasicExtractor: INFO
+    ShardingSphere-SQL: DEBUG
+
+spring:
+  jpa:
+    database: mysql
+    show-sql: true
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+
+  shardingsphere:
+    datasource:
+      names: sharding0
+      sharding0:
+        name: sharding0
+        driver-class-name: org.mariadb.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3306/sharding0?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+        username: quinn
+        password: quinn
+        connection-properties: characterEncoding=utf8
+        type: com.zaxxer.hikari.HikariDataSource
+    props:
+      sql.show: true
+    sharding:
+      default-data-source-name: sharding0
+      default-table-strategy:
+        standard:
+          sharding-column: id
+          precise-algorithm-class-name: demo.sharding.sphere.config.strategy.algorithm.IDPreciseShardingAlgorithm
+      default-key-generator:
+        type: SNOWFLAKE_PLUS
+        column: id
+        props:
+          worker.id: ${CF_INSTANCE_INDEX:${random.int(1024)}}
+      tables:
+        csbc_msg:
+          logic-table: csbc_msg
+          actual-data-nodes: sharding0.csbc_msg_$->{0..3}
+#          table-strategy:
+#            hint:
+#              algorithm-class-name: demo.sharding.sphere.config.strategy.algorithm.HintTableShardingAlgorithm
+        csbc_msg_process:
+          logic-table: csbc_msg_process
+          actual-data-nodes: sharding0.csbc_msg_process_0, sharding0.csbc_msg_process_20_3_$->{6..7}
+          table-strategy:
+#            complex:
+#              sharding-columns: type, process_state
+#              algorithm-class-name: demo.sharding.sphere.config.strategy.algorithm.CsbcMessageComplexShardingAlgorithm
+            standard:
+              sharding-column: created_time
+              precise-algorithm-class-name: demo.sharding.sphere.config.strategy.algorithm.CreatedTimeShardingTableAlgorithm
+      binding-tables: csbc_msg, csbc_msg_process
+
+sharding:
+  created-time-sharding-rule: yy_M_d

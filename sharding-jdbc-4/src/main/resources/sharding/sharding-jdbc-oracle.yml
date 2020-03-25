@@ -1,0 +1,25 @@
+dataSources:
+  sharding0: !!com.zaxxer.hikari.HikariDataSource
+    poolName: sharding0
+    driverClassName: oracle.jdbc.OracleDriver
+    jdbcUrl: jdbc:oracle:thin:@//localhost:1521/ORCLPDB1
+    username: username
+    password: password
+props:
+  sql.show: true
+  check.table.metadata.enabled: false
+shardingRule:
+  defaultDataSourceName: sharding0
+  defaultKeyGenerator:
+    type: SNOWFLAKE_PLUS
+    column: id
+  defaultTableStrategy:
+    standard:
+      shardingColumn: id
+      preciseAlgorithmClassName: shardingjdbc4.config.sharding.algorithm.IDPreciseShardingAlgorithm
+  bindingTables:
+    - animals
+  tables:
+    animals:
+      logicTable: animals
+      actualDataNodes: sharding0.animals, sharding0.animals_20_${3}

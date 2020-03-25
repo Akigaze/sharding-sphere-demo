@@ -1,0 +1,58 @@
+server:
+  port: 8899
+
+logging:
+  level:
+    demo.sharding.sphere.shardingjdbc: DEBUG
+    org.hibernate: INFO
+    org.hibernate.type.descriptor.sql.BasicBinder: INFO
+    org.hibernate.type.descriptor.sql.BasicExtractor: INFO
+    Sharding-Sphere-SQL: DEBUG
+
+spring:
+  jpa:
+    database: oracle
+    show-sql: true
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+
+  flyway:
+    enabled: false
+    locations: classpath:db/migration
+
+sharding:
+  jdbc:
+    datasource:
+      names: sharding0
+      sharding0:
+        name: sharding0
+        jdbc-url: jdbc:oracle:thin:@//localhost:1521/database
+        username: username
+        password: password
+        connection-properties: characterEncoding=utf8
+        type: com.zaxxer.hikari.HikariDataSource
+    config:
+      sharding:
+        default-data-source-name: sharding0
+        default-key-generator-class-name: demo.sharding.jdbc3.algorithm.SnowflakeShardingKeyGenerator
+        default-table-strategy:
+          standard:
+            sharding-column: id
+            precise-algorithm-class-name: demo.sharding.jdbc3.algorithm.IDPreciseShardingAlgorithm
+        props:
+          sql.show: true
+        binding-tables: msg, msg_process
+        tables:
+          msg:
+            logic-table: msg
+            actual-data-nodes: sharding0.msg_process, sharding0.msg_20_$->{1..12}
+            key-generator-column-name: id
+          msg_process:
+            logic-table: msg_process
+            actual-data-nodes: sharding0.msg_process, sharding0.msg_process_20_$->{1..12}
+            key-generator-column-name: id
+
+jdbc3:
+  created-time-sharding-rule: yy_M
+  worker-id: ${CF_INSTANCE_INDEX:${random.int(1024)}}

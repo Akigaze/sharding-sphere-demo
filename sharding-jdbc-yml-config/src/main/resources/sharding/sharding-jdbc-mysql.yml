@@ -1,0 +1,23 @@
+dataSources:
+  sharding0: !!com.zaxxer.hikari.HikariDataSource
+    poolName: sharding0
+    driverClassName: org.mariadb.jdbc.Driver
+    jdbcUrl: jdbc:mysql://localhost:3306/sharding0?characterEncoding=utf8&useSSL=false&serverTimezone=UTC
+    username: username
+    password: password
+props:
+  sql.show: true
+shardingRule:
+  defaultDataSourceName: sharding0
+  defaultKeyGeneratorClassName: demo.sharding.jdbc.yml.config.sharding.keygenerator.SnowflakeShardingKeyGenerator
+  defaultTableStrategy:
+    standard:
+      shardingColumn: id
+      preciseAlgorithmClassName: demo.sharding.jdbc.yml.config.sharding.algorithm.IDPreciseShardingAlgorithm
+  bindingTables:
+    - animals
+  tables:
+    animals:
+      logicTable: animals
+      actualDataNodes: sharding0.animals, sharding0.animals_20_${3}
+      keyGeneratorColumnName: id

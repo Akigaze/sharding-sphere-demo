@@ -1,0 +1,60 @@
+server:
+  port: 9898
+
+spring:
+  jpa:
+    database: mysql
+    show-sql: true
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+
+logging:
+  level:
+    demo.sharding.sphere.shardingjdbc: DEBUG
+    org.hibernate: INFO
+    org.hibernate.type.descriptor.sql.BasicBinder: INFO
+    org.hibernate.type.descriptor.sql.BasicExtractor: INFO
+    ShardingSphere-SQL: DEBUG
+
+sharding:
+  main-database: sharding0
+  sql-show: true
+  default-database-sharding-strategy:
+    column: catigory
+    type: none
+#    algorithm: sharding${catigory % 2}
+  default-table-sharding-strategy:
+    column: id
+    type: standard
+    precise-algorithm: timing
+
+  database:
+    sharding0:
+      url: jdbc:mysql://localhost:3306/sharding0?characterEncoding=utf8&useSSL=false&serverTimezone=UTC
+      driver-class-name: org.mariadb.jdbc.Driver
+      username: quinn
+      password: quinn
+      name: sharding0
+    sharding1:
+      enabled: false
+      url: jdbc:mysql://localhost:3306/sharding1?characterEncoding=utf8&useSSL=false&serverTimezone=UTC
+      driver-class-name: org.mariadb.jdbc.Driver
+      username: quinn
+      password: quinn
+      name: sharding1
+  tables:
+    goods:
+      name: goods
+      logic-table: goods
+      actual-data-nodes: sharding0.goods$->{0..3}
+      key-generator-type: SNOWFLAKE
+      key-generator-column: id
+    orders:
+      name: orders
+      logic-table: orders
+      actual-data-nodes: sharding0.orders$->{0..1}
+      key-generator-type: SNOWFLAKE
+      key-generator-column: id
+
+
