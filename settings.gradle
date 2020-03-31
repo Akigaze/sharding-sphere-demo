@@ -6,4 +6,5 @@ include 'sharding-jdbc-yml-config'
 include 'sharding-strategy'
 include 'sharding-jdbc-3'
 include 'sharding-jdbc-4'
+include 'sharding-execute-engine'
 

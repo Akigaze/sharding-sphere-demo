@@ -1,0 +1,15 @@
+plugins {
+}
+
+group 'demo.sharding.sphere'
+version '0.0.1-SNAPSHOT'
+
+repositories {
+}
+
+dependencies {
+    implementation project(":common")
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.apache.shardingsphere:sharding-jdbc-core:4.0.1'
+    runtimeOnly files("../libs/ojdbc7-12.1.0.2.jar")
+}
