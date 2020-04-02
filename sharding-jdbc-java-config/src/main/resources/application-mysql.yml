@@ -1,37 +1,5 @@
-server:
-  port: 9898
-
-spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/sharding0?characterEncoding=utf8&useSSL=false&serverTimezone=UTC
-    driver-class-name: org.mariadb.jdbc.Driver
-    username: quinn
-    password: quinn
-    hikari:
-      maximum-pool-size: 20
-      pool-name: pool-1
-  jpa:
-    database: mysql
-    show-sql: true
-    open-in-view: false
-    hibernate:
-      ddl-auto: none
-  profiles:
-    active: oracle
-
-logging:
-  level:
-    demo.sharding.sphere.shardingjdbc: DEBUG
-    org.hibernate: INFO
-    org.hibernate.type.descriptor.sql.BasicBinder: INFO
-    org.hibernate.type.descriptor.sql.BasicExtractor: INFO
-    ShardingSphere-SQL: DEBUG
-
 java:
   sharding:
-    enabled: false
-    worker-id: ${CF_INSTANCE_INDEX:${random.int(1024)}}
-    pattern: yy_M
     datasource:
       master:
         enabled: true
@@ -54,4 +22,5 @@ java:
         driver-class-name: org.mariadb.jdbc.Driver
         username: quinn
         password: quinn
+
 
