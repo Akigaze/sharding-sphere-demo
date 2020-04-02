@@ -1,0 +1,26 @@
+java:
+  sharding:
+    datasource:
+      master:
+        enabled: true
+        name: master
+        url: jdbc:oracle:thin:@//localhost:1521/xe
+        driver-class-name: oracle.jdbc.OracleDriver
+        username: username
+        password: password
+      salve1:
+        enabled: true
+        name: salve1
+        url: jdbc:oracle:thin:@//localhost:1521/xe
+        driver-class-name: oracle.jdbc.OracleDriver
+        username: username
+        password: password
+      salve2:
+        enabled: false
+        name: salve2
+        url: jdbc:oracle:thin:@//localhost:1521/xe
+        driver-class-name: oracle.jdbc.OracleDriver
+        username: username
+        password: password
+
+
